@@ -5,6 +5,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +23,7 @@ import com.example.mvcrest.repositorie.CustomerRepository;
 
 public class CustomerServiceTest {
 	
-	static final String URL_PREFIX = "/shop/customers/";
+	static final String URL_PREFIX = "/api/v1/customers/";
 	
 	CustomerService customerService;
 	
@@ -78,4 +79,28 @@ public class CustomerServiceTest {
 		assertEquals(URL_PREFIX + id.toString(), customerDTO.getCustomerUrl());
 	}
 
+	@Test
+	public void testCreateNewCustomer() throws Exception {
+		// given
+		Long id = 3L;
+		String firstname = "James";
+		String lastname = "Tony";
+		Customer savedCustomer = new Customer();
+		savedCustomer.setId(id);
+		savedCustomer.setFirstname(firstname);
+		savedCustomer.setLastname(lastname);
+		
+		CustomerDTO customerDTO = new CustomerDTO();
+	
+		when(customerRepository.save(any(Customer.class))).thenReturn(savedCustomer);
+		
+		// when
+		CustomerDTO savedCustomerDTO = customerService.createNewCustomer(customerDTO);
+		
+		// then
+		verify(customerRepository, times(1)).save(any(Customer.class));
+		assertEquals(id, savedCustomerDTO.getId());
+		assertEquals(firstname, savedCustomer.getFirstname());
+	
+	}
 }

@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.mvcrest.api.v1.model.CustomerDTO;
@@ -34,5 +36,12 @@ public class CustomerController {
 		return new ResponseEntity<CustomerListDTO>(
 				new CustomerListDTO(customerService.getAllCustomers()),
 				HttpStatus.OK);
+	}
+
+	@PostMapping
+	public ResponseEntity<CustomerDTO> createNewCustomer(@RequestBody CustomerDTO customerDTO) {
+		
+		CustomerDTO savedCustomerDTO = customerService.createNewCustomer(customerDTO);
+		return new ResponseEntity<CustomerDTO>(savedCustomerDTO, HttpStatus.CREATED);
 	}
 }

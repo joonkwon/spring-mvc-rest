@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.mvcrest.api.v1.mapper.CustomerMapper;
 import com.example.mvcrest.api.v1.model.CustomerDTO;
+import com.example.mvcrest.domain.Customer;
 import com.example.mvcrest.repositorie.CustomerRepository;
 
 @Service
@@ -42,6 +43,18 @@ public class CustomerServiceImpl implements CustomerService {
 		customerDTO.setCustomerUrl(URL_PREFIX + customerDTO.getId());
 		
 		return customerDTO;
+	}
+	
+	@Override
+	public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
+		
+		Customer customer = customerMapper.cutomerDTOToCustomer(customerDTO);
+		Customer savedCustomer = customerRepository.save(customer);
+		
+		CustomerDTO savedCustomerDTO = customerMapper.customerToCustomerDTO(savedCustomer);
+		savedCustomerDTO.setCustomerUrl(URL_PREFIX + savedCustomerDTO.getId());
+		
+		return savedCustomerDTO;
 	}
 
 }
