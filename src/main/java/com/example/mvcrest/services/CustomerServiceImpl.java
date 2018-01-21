@@ -39,6 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public CustomerDTO getById(Long id) {
 		
 		CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customerRepository.findById(id).get());
+		customerDTO.setCustomerUrl(URL_PREFIX + customerDTO.getId());
 		
 		return customerDTO;
 	}
