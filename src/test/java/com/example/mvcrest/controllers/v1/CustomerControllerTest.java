@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,12 +23,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.example.mvcrest.api.v1.model.CustomerDTO;
-import com.example.mvcrest.domain.Customer;
-import com.example.mvcrest.repositorie.CustomerRepository;
 import com.example.mvcrest.services.CustomerService;
 
 public class CustomerControllerTest {
@@ -98,5 +96,23 @@ public class CustomerControllerTest {
 			.andExpect(jsonPath("$.firstname", equalTo("first")))
 			.andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customers/2")));
 		
+	}
+	
+	@Test
+	public void testUpdateCustomer() throws Exception {
+		Long id = 3L;
+		CustomerDTO customerDTO = new CustomerDTO();
+		customerDTO.setFirstname("foo");
+		customerDTO.setLastname("bar");
+		customerDTO.setCustomerUrl("/api/v1/customers/" + id);
+		
+		when(customerService.saveCustomerDTO(anyLong(), any(CustomerDTO.class))).thenReturn(customerDTO);
+		
+		mockMvc.perform(put("/api/v1/customers/" + id)
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(asJsonString(customerDTO)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.firstname", equalTo("foo")))
+			.andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customers/" + id)));				
 	}
 }
