@@ -5,6 +5,8 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -93,4 +95,5 @@ public class CustomerServiceIT {
 		assertThat(oldCustomerDTO.getLastname(), not(equalTo(savedCus.getLastname())));
 		assertThat(oldCustomerDTO.getFirstname(), equalTo(savedCus.getFirstname()));
 	}
+	
 }

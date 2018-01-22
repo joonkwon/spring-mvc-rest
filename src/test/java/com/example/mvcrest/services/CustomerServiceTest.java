@@ -129,4 +129,14 @@ public class CustomerServiceTest {
 		assertEquals(firstname, savedCustomerDTO.getFirstname());
 		assertEquals(URL_PREFIX + id, savedCustomerDTO.getCustomerUrl());
 	}
+	
+	@Test
+	public void testDeleteCustomerById() {
+		// when
+		customerService.deleteCustomerById(2L);
+		
+		// then
+		verify(customerRepository, times(1)).deleteById(new Long(2));
+		
+	}
 }

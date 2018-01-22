@@ -1,7 +1,10 @@
 package com.example.mvcrest.controllers.v1;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -142,7 +145,16 @@ public class CustomerControllerTest {
 				.andExpect(jsonPath("$.id", equalTo(id.intValue())))
 				.andExpect(jsonPath("$.firstname", equalTo(newCus.getFirstname())))
 				.andExpect(jsonPath("$.lastname", equalTo(savedCus.getLastname())))
-				.andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customers/" + id)));
+				.andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customers/" + id)));	
+	}
+	
+	@Test
+	public void testDeleteById() throws Exception {
 		
+		mockMvc.perform(delete("/api/v1/customers/3")
+					.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk());
+		
+		verify(customerService, times(1)).deleteCustomerById(new Long(3));
 	}
 }
