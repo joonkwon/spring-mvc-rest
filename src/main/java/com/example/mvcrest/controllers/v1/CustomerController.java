@@ -17,8 +17,10 @@ import com.example.mvcrest.api.v1.model.CustomerListDTO;
 import com.example.mvcrest.services.CustomerService;
 
 @Controller
-@RequestMapping("/api/v1/customers")
+@RequestMapping(CustomerController.CUSTOMER_BASE_URL)
 public class CustomerController {
+	
+	public static final String CUSTOMER_BASE_URL = "/api/v1/customers";
 	
 	private final CustomerService customerService;
 	
