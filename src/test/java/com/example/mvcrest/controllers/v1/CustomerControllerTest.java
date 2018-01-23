@@ -24,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.context.config.ResourceNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -32,6 +31,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.example.mvcrest.api.v1.model.CustomerDTO;
 import com.example.mvcrest.controllers.RestResponseEntityExceptionHandler;
 import com.example.mvcrest.services.CustomerService;
+import com.example.mvcrest.services.ResourceNotFoundException;
 
 import javassist.NotFoundException;
 
