@@ -24,16 +24,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.context.config.ResourceNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.example.mvcrest.api.v1.model.CustomerDTO;
+import com.example.mvcrest.controllers.RestResponseEntityExceptionHandler;
 import com.example.mvcrest.services.CustomerService;
+
+import javassist.NotFoundException;
 
 public class CustomerControllerTest {
 	
 	CustomerController customerController;
+	RestResponseEntityExceptionHandler restResponseEntityExceptionHandler;
 	MockMvc mockMvc;
 	
 	@Mock
@@ -42,8 +47,12 @@ public class CustomerControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
+		restResponseEntityExceptionHandler = new RestResponseEntityExceptionHandler();
 		customerController = new CustomerController(customerService);
-		mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
+		
+		mockMvc = MockMvcBuilders.standaloneSetup(customerController)
+				.setControllerAdvice(restResponseEntityExceptionHandler)
+				.build();
 	}
 
 	@Test
@@ -155,5 +164,15 @@ public class CustomerControllerTest {
 			.andExpect(status().isOk());
 		
 		verify(customerService, times(1)).deleteCustomerById(new Long(3));
+	}
+	
+	@Test
+	public void testResourceNotFoundException() throws Exception {
+	
+		when(customerService.getById(anyLong())).thenThrow(ResourceNotFoundException.class);
+		
+		mockMvc.perform(get(CustomerController.CUSTOMER_BASE_URL + "/5000"))
+//			.andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE))
+			.andExpect(status().isNotFound());
 	}
 }

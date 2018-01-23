@@ -1,6 +1,7 @@
 package com.example.mvcrest.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -38,8 +39,11 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public CustomerDTO getById(Long id) {
-		
-		CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customerRepository.findById(id).get());
+		Optional <Customer> customerOptional = customerRepository.findById(id);
+		if (!customerOptional.isPresent()) {
+			throw new ResourceNotFoundException("Customer not found id: " + id);
+		}
+		CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customerOptional.get());
 		customerDTO.setCustomerUrl(URL_PREFIX + customerDTO.getId());
 		
 		return customerDTO;
@@ -48,32 +52,29 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
 		
-		Customer customer = customerMapper.cutomerDTOToCustomer(customerDTO);
-		
-		return saveAndReturnDTO(customer);
+		return saveAndReturnDTO(customerDTO);
 	}
 
-	private CustomerDTO saveAndReturnDTO(Customer customer) {
+	private CustomerDTO saveAndReturnDTO(CustomerDTO customerDTO) {
 		
-		Customer savedCustomer = customerRepository.save(customer);
-		CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(savedCustomer);
-		customerDTO.setCustomerUrl(URL_PREFIX + customerDTO.getId());
+		Customer savedCustomer = customerRepository.save(customerMapper.cutomerDTOToCustomer(customerDTO));
+		CustomerDTO savedCustomerDTO = customerMapper.customerToCustomerDTO(savedCustomer);
+		savedCustomerDTO.setCustomerUrl(URL_PREFIX + savedCustomerDTO.getId());
 		
-		return customerDTO;
+		return savedCustomerDTO;
 	}
 	
 	@Override
 	public CustomerDTO saveCustomerDTO(Long id, CustomerDTO customerDTO) {
 		
-		Customer customer = customerMapper.cutomerDTOToCustomer(customerDTO);
-		customer.setId(id);
+		customerDTO.setId(id);
 		
-		return saveAndReturnDTO(customer);
+		return saveAndReturnDTO(customerDTO);
 	}
 	
 	@Override
 	public CustomerDTO patchCustomerDTO(Long id, CustomerDTO customerDTO) {
-		Customer customer = customerRepository.findById(id).get();
+		CustomerDTO customer = getById(id)	;
 		customer.setId(id);
 		
 		if (customerDTO.getFirstname() != null) {
