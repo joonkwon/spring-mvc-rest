@@ -21,6 +21,7 @@ import com.example.mvcrest.bootstrap.Bootstrap;
 import com.example.mvcrest.domain.Customer;
 import com.example.mvcrest.repositorie.CategoryRepository;
 import com.example.mvcrest.repositorie.CustomerRepository;
+import com.example.mvcrest.repositorie.VendorRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,12 +38,15 @@ public class CustomerServiceIT {
 	@Autowired
 	CategoryRepository categoryRepository;
 	
+	@Autowired
+	VendorRepository VendorRepository;
+	
 	@Before
 	public void setUp() throws Exception {
 		log.info("Initial customer data count" + customerRepository.findAll().size());
 		log.info("loading initial data");
 		
-		Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository);
+		Bootstrap bootstrap = new Bootstrap(categoryRepository, customerRepository, VendorRepository);
 		bootstrap.run(); // load data
 		
 		log.info("Initial Data loaded");
