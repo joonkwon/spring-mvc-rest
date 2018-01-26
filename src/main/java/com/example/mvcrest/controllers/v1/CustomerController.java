@@ -18,6 +18,10 @@ import com.example.mvcrest.api.v1.model.CustomerDTO;
 import com.example.mvcrest.api.v1.model.CustomerListDTO;
 import com.example.mvcrest.services.CustomerService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(description="This is value of Cutomer Controller")
 @RestController
 @RequestMapping(CustomerController.CUSTOMER_BASE_URL)
 public class CustomerController {
@@ -37,6 +41,7 @@ public class CustomerController {
 		return customerService.getById(new Long(id));
 	}
 	
+	@ApiOperation(value = "this to get all customers", notes = "These are some notes about the API.")
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public CustomerListDTO getAllCustomers() {
