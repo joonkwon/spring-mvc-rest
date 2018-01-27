@@ -18,6 +18,10 @@ import com.example.mvcrest.api.v1.model.VendorDTO;
 import com.example.mvcrest.api.v1.model.VendorListDTO;
 import com.example.mvcrest.services.VendorService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(tags="this is tag")
 @Controller
 @ResponseBody
 @RequestMapping("/api/v1/vendors")
@@ -35,6 +39,7 @@ public class VendorController {
 		return vendors;
 	}
 	
+	@ApiOperation(value = "Get a vendor by its ID")
 	@GetMapping("{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public VendorDTO getById(@PathVariable Long id) {
