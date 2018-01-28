@@ -109,7 +109,12 @@ public class VendorServiceTest {
 		VendorDTO newVendorDTO = new VendorDTO();
 		newVendorDTO.setName(newName);
 		
+		Vendor savedVendor = new Vendor();
+		savedVendor.setName(newName);
+		savedVendor.setId(id);
+		
 		when(vendorRepository.findById(anyLong())).thenReturn(Optional.of(vendor));
+		when(vendorRepository.save(any())).thenReturn(savedVendor);
 		
 		// when
 		VendorDTO retVendorDTO = vendorService.updateVendor(id, newVendorDTO);
